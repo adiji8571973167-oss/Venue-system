@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Campus Venue & Timetable System</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Leaflet Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🏫 Smart Campus
+    </div>
+
+    <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#personal">Personal Details</a></li>
+        <li><a href="#sections">Sections</a></li>
+        <li><a href="#search">Search</a></li>
+        <li><a href="#timetable">Timetable</a></li>
+        <li><a href="#venues">Venues</a></li>
+        <li><a href="#map">Map</a></li>
+    </ul>
+
+</nav>
+
+
+<!-- ================= HOME ================= -->
+
+<section class="hero" id="home">
+
+    <div class="hero-content">
+
+        <h1>Smart Campus Venue System</h1>
+
+        <h2>BCA(AI/ML) 3rd Semester</h2>
+
+        <p>
+            Find your classroom, teacher, timetable and venue easily.
+        </p>
+    </div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- PERSONAL DETAILS - NEW SECTION -->
+<!-- ================================================= -->
+
+<section class="personal-section" id="personal">
+
+    <div class="heading">
+
+        <h2>👨‍💻 Personal Details</h2>
+
+        <p>
+            Project Team Members
+        </p>
+
+    </div>
+
+    <div class="personal-grid">
+
+        <!-- Aditya Kumar -->
+
+        <div class="personal-card">
+
+            <div class="profile-image">
+
+                <img src="Screenshot 2026-08-24 122644.png"
+                     alt="Aditya Kumar">
+
+            </div>
+
+            <h3>Aditya Kumar</h3>
+
+            <p class="role">
+                BCA(AI/ML) 3rd Semester
+            </p>
+
+            <p>
+                Project Team Member
+            </p>
+
+            <button onclick="showMember('Aditya Kumar')">
+                View Details
+            </button>
+
+        </div>
+
+
+        <!-- Aksh Pundir -->
+
+        <div class="personal-card">
+
+            <div class="profile-image">
+
+                <img src="WhatsApp Image 2026-08-24 at 10.59.48 AM.jpeg"
+                     alt="Aksh Pundir">
+
+            </div>
+
+            <h3>Aksh Pundir</h3>
+
+            <p class="role">
+                BCA(AI/ML) 3rd Semester
+            </p>
+
+            <p>
+                Project Team Member
+            </p>
+
+            <button onclick="showMember('Aksh Pundir')">
+                View Details
+            </button>
+
+        </div>
+
+
+        <!-- Aakash Kamboj -->
+
+        <div class="personal-card">
+
+            <div class="profile-image">
+
+                <img src="WhatsApp Image 2026-08-24 at 11.01.04 AM.jpeg"
+                     alt="Aakash Kamboj">
+
+            </div>
+
+            <h3>Aakash Kamboj</h3>
+
+            <p class="role">
+                BCA(AI/ML) 3rd Semester
+            </p>
+
+            <p>
+                Project Team Member
+            </p>
+
+            <button onclick="showMember('Aakash Kamboj')">
+                View Details
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- Member popup/detail -->
+
+    <div id="memberDetails" class="member-details">
+
+        <h3 id="memberName"></h3>
+
+        <p id="memberInfo"></p>
+
+        <button onclick="closeMemberDetails()">
+            Close
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ================= SECTION SELECTION ================= -->
+
+<section class="section-selection" id="sections">
+
+    <h2>🎓 Select Your Section</h2>
+
+    <p>
+        First select your BCA(AI/ML) 3rd Semester section.
+    </p>
+
+    <div class="section-grid">
+
+        <button onclick="selectSection('A')">Section A</button>
+
+        <button onclick="selectSection('B')">Section B</button>
+
+        <button onclick="selectSection('C')">Section C</button>
+
+        <button onclick="selectSection('D')">Section D</button>
+
+        <button onclick="selectSection('E')">Section E</button>
+
+        <button onclick="selectSection('F')">Section F</button>
+
+        <button onclick="selectSection('G')">Section G</button>
+
+        <button onclick="selectSection('H')">Section H</button>
+
+        <button onclick="selectSection('I')">Section I</button>
+
+    </div>
+
+    <div id="selectedSection">
+        No section selected.
+    </div>
+
+</section>
+
+
+<!-- ================= SEARCH ================= -->
+
+<section class="search-section" id="search">
+
+    <h2>🔎 Search Your Timetable</h2>
+
+    <p id="searchInstruction">
+        Please select your section first.
+    </p>
+
+    <div class="search-area">
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search room, teacher, code, day..."
+            disabled
+        >
+
+        <button
+            id="searchButton"
+            onclick="searchTimetable()"
+            disabled
+        >
+            Search
+        </button>
+
+    </div>
+
+    <div class="quick-search">
+
+        <button onclick="quickSearch('Monday')">
+            Monday
+        </button>
+
+        <button onclick="quickSearch('Tuesday')">
+            Tuesday
+        </button>
+
+        <button onclick="quickSearch('Wednesday')">
+            Wednesday
+        </button>
+
+        <button onclick="quickSearch('Thursday')">
+            Thursday
+        </button>
+
+        <button onclick="quickSearch('Friday')">
+            Friday
+        </button>
+
+    </div>
+
+    <div id="searchMessage"></div>
+
+</section>
+
+
+<!-- ================= TIMETABLE ================= -->
+
+<section class="timetable-section" id="timetable">
+
+    <div class="heading">
+
+        <h2>📅 Timetable</h2>
+
+        <p id="timetableTitle">
+            Select a section to view timetable.
+        </p>
+
+    </div>
+
+    <div class="table-container">
+
+        <table>
+
+            <thead id="tableHead"></thead>
+
+            <tbody id="tableBody"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- ================= VENUES ================= -->
+
+<section class="venues" id="venues">
+
+    <div class="heading">
+
+        <h2>📍 Important Campus Venues</h2>
+
+        <p>
+            Select a venue to see its location.
+        </p>
+
+    </div>
+
+    <div class="venue-grid">
+
+        <div class="venue-card">
+
+            <span>🏫</span>
+
+            <h3>Block B</h3>
+
+            <p>B301 - B308 classrooms</p>
+
+            <button onclick="showVenue('Block B')">
+                View Location
+            </button>
+
+        </div>
+
+
+        <div class="venue-card">
+
+            <span>📚</span>
+
+            <h3>Library</h3>
+
+            <p>Central Library</p>
+
+            <button onclick="showVenue('Library')">
+                View Location
+            </button>
+
+        </div>
+
+
+        <div class="venue-card">
+
+            <span>🎤</span>
+
+            <h3>Auditorium</h3>
+
+            <p>Seminars and events</p>
+
+            <button onclick="showVenue('Auditorium')">
+                View Location
+            </button>
+
+        </div>
+
+
+        <div class="venue-card">
+
+            <span>🍴</span>
+
+            <h3>Canteen</h3>
+
+            <p>Student food area</p>
+
+            <button onclick="showVenue('Canteen')">
+                View Location
+            </button>
+
+        </div>
+
+
+        <div class="venue-card">
+
+            <span>🏥</span>
+
+            <h3>Medical Centre</h3>
+
+            <p>Medical assistance</p>
+
+            <button onclick="showVenue('Medical Centre')">
+                View Location
+            </button>
+
+        </div>
+
+
+        <div class="venue-card">
+
+            <span>🏃</span>
+
+            <h3>Sports Complex</h3>
+
+            <p>Sports activities</p>
+
+            <button onclick="showVenue('Sports Complex')">
+                View Location
+            </button>
+
+        </div>
+
+
+        <div class="venue-card">
+
+            <span>🚗</span>
+
+            <h3>Parking</h3>
+
+            <p>Campus parking area</p>
+
+            <button onclick="showVenue('Parking')">
+                View Location
+            </button>
+
+        </div>
+
+
+        <div class="venue-card">
+
+            <span>🏢</span>
+
+            <h3>Administrative Block</h3>
+
+            <p>Administration offices</p>
+
+            <button onclick="showVenue('Administrative Block')">
+                View Location
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= MAP ================= -->
+
+<section class="map-section" id="map">
+
+    <div class="heading">
+
+        <h2>🗺 Campus Map</h2>
+
+        <p>
+            Find important campus locations.
+        </p>
+
+    </div>
+
+    <div class="map-buttons">
+
+        <button onclick="showAllVenues()">
+            Show All Venues
+        </button>
+
+        <button onclick="openGoogleMaps()">
+            Open Google Maps
+        </button>
+
+    </div>
+
+    <div id="campusMap"></div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <h3>
+        Smart Campus Venue & Timetable System
+    </h3>
+
+    <p>
+        BCA 3rd Semester Web Design Project
+    </p>
+
+    <p>
+        M.M. Institute of Computer Technology & Business Management
+    </p>
+
+    <p>
+        Maharishi Markandeshwar (Deemed to be University)
+    </p>
+
+    <p>
+        Mullana-Ambala, Haryana
+    </p>
+
+    <p>
+        © 2026 Smart Campus Project
+    </p>
+
+</footer>
+
+
+<!-- Leaflet -->
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+<!-- JavaScript -->
+
+<script src="script.js"></script>
+
+</body>
+</html>
