@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Campus - Admin Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="admin-page">
+<div class="admin-shell">
+<div class="admin-card">
+<div class="admin-title">
+<h1>🔐 Admin Dashboard</h1>
+<p>Team member information is available only after admin authentication.</p>
+</div>
+
+<div id="loginBox" class="admin-login">
+<label for="adminPassword">Admin Password</label>
+<input id="adminPassword" type="password" placeholder="Enter admin password" autocomplete="off">
+<button onclick="adminLogin()">🔓 Login as Admin</button>
+<div id="loginMessage" class="admin-message"></div>
+</div>
+
+<div id="adminContent" class="admin-content">
+<div class="admin-toolbar">
+<strong>👨‍💼 Logged in as Administrator</strong>
+<button class="admin-logout" onclick="adminLogout()">Logout</button>
+</div>
+
+<div class="admin-note">
+For privacy, sensitive identifiers are masked even in this demonstration dashboard. A real production system should use server-side authentication and a protected database.
+</div>
+
+<div id="profileArea"></div>
+</div>
+</div>
+</div>
+</main>
+
+<script>
+const ADMIN_PASSWORD_HASH = 'a36aef5a11c4073fbe60314fc9df530a9d5f986533594d1f5190742ff9e0e408';
+
+const members = {
+  aditya: {
+    name:'ADITYA KUMAR', father:'MANISH KUMAR', mother:'MENIKA', gender:'Male',
+    aadhaar:'••••••••5849', mobile:'+91-••••••3167', email:'adiji********@gmail.com',
+    category:'SC', blood:'B+', religion:'Hindu', country:'India', state:'Haryana',
+    abc:'••••••••0835', pin:'135001', city:'Yamuna Nagar', address:'Yamuna Nagar, Haryana',
+    photo:'Screenshot 2026-08-24 122644.png'
+  },
+  aksh: {
+    name:'AKSH PUNDIR', father:'RAVINDER NATH', mother:'ANJESH', gender:'Male',
+    aadhaar:'••••••••9376', mobile:'+91-••••••4400', email:'akshpundir68@*****.com',
+    category:'OBC', blood:'Select Blood Group', religion:'Hindu', country:'India', state:'Haryana',
+    abc:'••••••••7233', pin:'133203', city:'Ambala', address:'Ambala, Haryana',
+    photo:'WhatsApp Image 2026-08-24 at 10.59.48 AM.jpeg'
+  }
+};
+
+async function sha256(value){
+  const data = new TextEncoder().encode(value);
+  const hash = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function adminLogin(){
+  const password=document.getElementById('adminPassword').value;
+  const message=document.getElementById('loginMessage');
+  if(!password){message.textContent='Please enter the admin password.';return;}
+  const hash=await sha256(password);
+  if(hash===ADMIN_PASSWORD_HASH){
+    sessionStorage.setItem('campusAdmin','true');
+    showAdmin();
+  }else{
+    message.textContent='❌ Incorrect admin password.';
+    document.getElementById('adminPassword').value='';
+  }
+}
+
+function showAdmin(){
+  document.getElementById('loginBox').style.display='none';
+  document.getElementById('adminContent').style.display='block';
+  renderProfiles();
+}
+
+function adminLogout(){
+  sessionStorage.removeItem('campusAdmin');
+  location.reload();
+}
+
+function field(label,value,full=false){
+  return `<div class="admin-field${full?' full':''}"><label>${label}</label><input value="${String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\"/g,'&quot;')}" readonly></div>`;
+}
+
+function profile(member){
+  return `<div class="admin-profile">
+    <div class="profile-top"><img src="${member.photo}" alt="Team member"><div><h2>${member.name}</h2><p>BCA (AI/ML) 3rd Semester</p></div></div>
+    <div class="admin-form">
+      ${field('Name',member.name)}${field('Father Name',member.father)}${field('Mother Name',member.mother)}${field('Gender',member.gender)}
+      ${field('Aadhaar Card No',member.aadhaar)}${field('Mobile Number',member.mobile)}${field('Email',member.email)}${field('Category',member.category)}
+      ${field('Blood Group',member.blood)}${field('Religion',member.religion)}${field('Country',member.country)}${field('State',member.state)}
+      ${field('ABC ID',member.abc)}${field('Pin-code',member.pin)}${field('City',member.city)}${field('Address',member.address,true)}
+    </div>
+  </div>`;
+}
+
+function renderProfiles(){
+  document.getElementById('profileArea').innerHTML=profile(members.aditya)+profile(members.aksh);
+}
+
+document.getElementById('adminPassword').addEventListener('keydown',e=>{if(e.key==='Enter')adminLogin();});
+if(sessionStorage.getItem('campusAdmin')==='true')showAdmin();
+</script>
+</body>
+</html>
