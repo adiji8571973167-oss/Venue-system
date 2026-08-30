@@ -7,13 +7,11 @@
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-/* Single-information view: only the item selected by the user is shown. */
 body.single-view section, body.single-view footer { display:none !important; }
 body.single-view section.active-view { display:block !important; }
 body.single-view #personal.active-view .personal-grid { display:none !important; }
 body.single-view #personal.active-view .member-details { display:block !important; }
 body.single-view #map.active-view { min-height:650px; }
-.view-hint { text-align:center; margin:15px auto 0; color:#666; font-size:14px; }
 </style>
 </head>
 <body>
@@ -33,11 +31,11 @@ body.single-view #map.active-view { min-height:650px; }
 <div class="personal-card"><div class="profile-image"><img src="WhatsApp Image 2026-08-24 at 11.01.04 AM.jpeg" alt="Aakash Kamboj"></div><h3>Aakash Kamboj</h3><p class="role">BCA (AI/ML) 3rd Semester</p><p>Project Team Member</p><button onclick="showMember('Aakash Kamboj')">View Details</button></div>
 </div><div id="memberDetails" class="member-details"><h3 id="memberName"></h3><p id="memberInfo"></p><button onclick="returnToHome()">← Back</button></div></section>
 
-<section class="section-selection" id="sections"><div class="heading"><h2>🎓 Select Your Section</h2><p>Click one section. Other information will be hidden and only its timetable will be displayed.</p></div><div class="section-grid"><button onclick="selectSection('A')">Section A</button><button onclick="selectSection('B')">Section B</button><button onclick="selectSection('C')">Section C</button><button onclick="selectSection('D')">Section D</button><button onclick="selectSection('E')">Section E</button><button onclick="selectSection('F')">Section F</button><button onclick="selectSection('G')">Section G</button><button onclick="selectSection('H')">Section H</button><button onclick="selectSection('I')">Section I</button></div><div id="selectedSection">No section selected.</div></section>
+<section class="section-selection" id="sections"><div class="heading"><h2>🎓 Select Your Section</h2><p>Click one section to see only its timetable and smart search.</p></div><div class="section-grid"><button onclick="selectSection('A')">Section A</button><button onclick="selectSection('B')">Section B</button><button onclick="selectSection('C')">Section C</button><button onclick="selectSection('D')">Section D</button><button onclick="selectSection('E')">Section E</button><button onclick="selectSection('F')">Section F</button><button onclick="selectSection('G')">Section G</button><button onclick="selectSection('H')">Section H</button><button onclick="selectSection('I')">Section I</button></div><div id="selectedSection">No section selected.</div></section>
 
-<section class="search-section" id="search"><div class="heading"><h2>🔎 Search Your Timetable</h2><p id="searchInstruction">Please select your section first.</p></div><div class="search-area"><input type="text" id="searchInput" placeholder="Search room, teacher, code, day..." disabled><button id="searchButton" onclick="searchTimetable()" disabled>Search</button></div><div class="quick-search"><button onclick="quickSearch('Monday')">Monday</button><button onclick="quickSearch('Tuesday')">Tuesday</button><button onclick="quickSearch('Wednesday')">Wednesday</button><button onclick="quickSearch('Thursday')">Thursday</button><button onclick="quickSearch('Friday')">Friday</button></div><div id="searchMessage"></div></section>
+<section class="search-section" id="search"><div class="heading"><h2>🔎 Search Your Timetable</h2><p id="searchInstruction">Select a section first, then search venue, teacher, subject, day, period or time.</p></div><div class="search-area"><select id="globalSearchType"><option value="all">Search All</option><option value="venue">🏫 Venue</option><option value="teacher">👨‍🏫 Teacher</option><option value="subject">📚 Subject / Code</option><option value="day">📅 Day</option><option value="period">⏰ Period</option><option value="time">🕐 Time</option></select><input type="text" id="searchInput" placeholder="Search venue, teacher, subject, day..." disabled><button id="searchButton" onclick="searchTimetable()" disabled>🔍 Search</button><button class="clear-btn" onclick="clearAllSearch()">✕ Clear</button></div><div class="quick-search"><button onclick="quickSearch('Monday')">Monday</button><button onclick="quickSearch('Tuesday')">Tuesday</button><button onclick="quickSearch('Wednesday')">Wednesday</button><button onclick="quickSearch('Thursday')">Thursday</button><button onclick="quickSearch('Friday')">Friday</button></div><div id="searchMessage"></div></section>
 
-<section class="timetable-section" id="timetable"><div class="heading"><h2>📅 Timetable</h2><p id="timetableTitle">Select a section to view timetable.</p></div><div class="table-container"><table><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div></section>
+<section class="timetable-section" id="timetable"><div class="heading"><h2>📅 Section Timetable</h2><p id="timetableTitle">Select a section to view timetable.</p></div><div class="timetable-filter-card"><div class="filter-title">🔎 Smart Timetable Search</div><p>Search only inside the selected section. You can find a venue, teacher, subject/code, day, period or exact time.</p><div class="timetable-search-row"><select id="sectionSearchType" onchange="filterSectionTimetable()"><option value="all">Search All</option><option value="venue">🏫 Venue</option><option value="teacher">👨‍🏫 Teacher</option><option value="subject">📚 Subject / Code</option><option value="day">📅 Day</option><option value="period">⏰ Period</option><option value="time">🕐 Time</option></select><input type="text" id="sectionSearchInput" placeholder="e.g. B302, GKD, AG-401, Monday, 1st..." oninput="filterSectionTimetable()"><button onclick="filterSectionTimetable()">🔍 Search</button><button class="clear-btn" onclick="clearSectionSearch()">✕ Clear</button></div><div id="sectionSearchStatus" class="search-status">Select a section to start searching.</div></div><div class="table-container"><table><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div><button class="back-btn center-btn" onclick="returnToHome()">← Back to Home</button></section>
 
 <section class="venues" id="venues"><div class="heading"><h2>📍 Important Campus Venues</h2><p>Click a venue's View Location button to see only its map view.</p></div><div class="venue-grid">
 <div class="venue-card"><span>🏫</span><h3>Block B</h3><p>B301 - B308 classrooms</p><button onclick="showVenue('Block B')">View Location</button></div><div class="venue-card"><span>📚</span><h3>Library</h3><p>Central Library</p><button onclick="showVenue('Library')">View Location</button></div><div class="venue-card"><span>🎤</span><h3>Auditorium</h3><p>Seminars and events</p><button onclick="showVenue('Auditorium')">View Location</button></div><div class="venue-card"><span>🍴</span><h3>Canteen</h3><p>Student food area</p><button onclick="showVenue('Canteen')">View Location</button></div><div class="venue-card"><span>🏥</span><h3>Medical Centre</h3><p>Medical assistance</p><button onclick="showVenue('Medical Centre')">View Location</button></div><div class="venue-card"><span>🏃</span><h3>Sports Complex</h3><p>Sports activities</p><button onclick="showVenue('Sports Complex')">View Location</button></div><div class="venue-card"><span>🚗</span><h3>Parking</h3><p>Campus parking area</p><button onclick="showVenue('Parking')">View Location</button></div><div class="venue-card"><span>🏢</span><h3>Administrative Block</h3><p>Administration offices</p><button onclick="showVenue('Administrative Block')">View Location</button></div>
@@ -49,51 +47,121 @@ body.single-view #map.active-view { min-height:650px; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="script.js"></script>
 <script>
 (function(){
-  const sections=['home','personal','sections','search','timetable','venues','map'];
+  const pageIds=['home','personal','sections','search','timetable','venues','map'];
   function showOnly(id){
     document.body.classList.add('single-view');
-    sections.forEach(x=>{const el=document.getElementById(x); if(el) el.classList.toggle('active-view',x===id);});
+    pageIds.forEach(x=>{const el=document.getElementById(x);if(el)el.classList.toggle('active-view',x===id);});
     window.scrollTo({top:0,behavior:'smooth'});
   }
   window.returnToHome=function(){
     document.body.classList.remove('single-view');
-    sections.forEach(x=>{const el=document.getElementById(x); if(el) el.classList.toggle('active-view',x==='home');});
-    const md=document.getElementById('memberDetails'); if(md) md.style.display='none';
+    pageIds.forEach(x=>{const el=document.getElementById(x);if(el)el.classList.toggle('active-view',x==='home');});
+    document.querySelectorAll('.personal-card').forEach(c=>c.style.display='block');
+    const md=document.getElementById('memberDetails');if(md)md.style.display='none';
     window.scrollTo({top:0,behavior:'smooth'});
   };
   window.openMemberView=function(name){
     showOnly('personal');
-    document.querySelectorAll('.personal-card').forEach(card=>{
-      const title=card.querySelector('h3');
-      card.style.display=(title && title.textContent.trim()===name)?'block':'none';
-    });
-    if(typeof showMember==='function') showMember(name);
-    const md=document.getElementById('memberDetails'); if(md) md.style.display='block';
+    document.querySelectorAll('.personal-card').forEach(card=>{const title=card.querySelector('h3');card.style.display=(title&&title.textContent.trim()===name)?'block':'none';});
+    if(typeof showMember==='function')showMember(name);
+    const md=document.getElementById('memberDetails');if(md)md.style.display='block';
   };
   window.openSectionView=function(letter){
     showOnly('timetable');
-    if(typeof selectSection==='function') selectSection(letter);
-    setTimeout(()=>window.scrollTo({top:0,behavior:'smooth'}),100);
+    if(typeof window.__originalSelectSection==='function')window.__originalSelectSection(letter);else if(typeof selectSection==='function')selectSection(letter);
+    setTimeout(()=>{updateSectionSearchState();filterSectionTimetable();window.scrollTo({top:0,behavior:'smooth'});},80);
   };
   window.openVenueView=function(name){
     showOnly('map');
-    const ins=document.getElementById('mapInstruction'); if(ins) ins.textContent='Showing location for: '+name;
-    if(typeof showVenue==='function') setTimeout(()=>showVenue(name),80);
-    setTimeout(()=>{ if(window.campusMap && typeof window.campusMap.invalidateSize==='function') window.campusMap.invalidateSize(); },300);
+    const ins=document.getElementById('mapInstruction');if(ins)ins.textContent='Showing location for: '+name;
+    if(typeof showVenue==='function')setTimeout(()=>showVenue(name),80);
+    setTimeout(()=>{if(window.campusMap&&typeof window.campusMap.invalidateSize==='function')window.campusMap.invalidateSize();},300);
   };
+  window.updateSectionSearchState=function(){
+    const input=document.getElementById('sectionSearchInput');
+    const type=document.getElementById('sectionSearchType');
+    const status=document.getElementById('sectionSearchStatus');
+    if(!input)return;
+    if(typeof selectedSection!=='undefined'&&selectedSection){
+      input.disabled=false;
+      status.textContent='Searching in Section '+selectedSection+'. Showing all timetable entries.';
+    }else{
+      input.disabled=true;
+      status.textContent='Select a section to start searching.';
+    }
+    if(type)type.value='all';
+  };
+  window.renderSectionSearchResults=function(rows){
+    const body=document.getElementById('tableBody');
+    if(!body)return;
+    body.innerHTML='';
+    if(!rows||rows.length===0){body.innerHTML='<tr><td colspan="6" class="no-results">❌ No matching timetable entry found.</td></tr>';return;}
+    rows.forEach(row=>{
+      const tr=document.createElement('tr');
+      const day=row[0]||'-', period=row[1]||'-', venue=row[2]||'-', teacher=row[3]||'-', subject=row[4]||'-';
+      const time=(typeof periods!=='undefined'&&periods[period])?periods[period]:'-';
+      tr.innerHTML='<td>'+day+'</td><td>'+period+'</td><td>'+time+'</td><td>'+venue+'</td><td>'+teacher+'</td><td>'+subject+'</td>';
+      body.appendChild(tr);
+    });
+  };
+  window.filterSectionTimetable=function(){
+    if(typeof selectedSection==='undefined'||!selectedSection){updateSectionSearchState();return;}
+    const input=(document.getElementById('sectionSearchInput').value||'').trim().toLowerCase();
+    const type=document.getElementById('sectionSearchType').value;
+    const data=(typeof timetable!=='undefined'&&timetable[selectedSection])?timetable[selectedSection]:[];
+    const results=!input?data:data.filter(row=>{
+      const day=String(row[0]||'').toLowerCase();
+      const period=String(row[1]||'').toLowerCase();
+      const venue=String(row[2]||'').toLowerCase();
+      const teacher=String(row[3]||'').toLowerCase();
+      const subject=String(row[4]||'').toLowerCase();
+      const time=(typeof periods!=='undefined'&&periods[row[1]]?String(periods[row[1]]):'').toLowerCase();
+      if(type==='venue')return venue.includes(input);
+      if(type==='teacher')return teacher.includes(input);
+      if(type==='subject')return subject.includes(input);
+      if(type==='day')return day.includes(input);
+      if(type==='period')return period.includes(input);
+      if(type==='time')return time.includes(input);
+      return day.includes(input)||period.includes(input)||time.includes(input)||venue.includes(input)||teacher.includes(input)||subject.includes(input);
+    });
+    renderSectionSearchResults(results);
+    const status=document.getElementById('sectionSearchStatus');
+    if(status)status.innerHTML=input?('✅ '+results.length+' result(s) found in Section <strong>'+selectedSection+'</strong>.'):('Showing complete timetable for Section <strong>'+selectedSection+'</strong>.');
+  };
+  window.clearSectionSearch=function(){
+    const input=document.getElementById('sectionSearchInput');if(input)input.value='';
+    const type=document.getElementById('sectionSearchType');if(type)type.value='all';
+    filterSectionTimetable();
+  };
+  window.clearAllSearch=function(){
+    const input=document.getElementById('searchInput');if(input)input.value='';
+    const type=document.getElementById('globalSearchType');if(type)type.value='all';
+    if(typeof searchTimetable==='function')searchTimetable();
+    filterSectionTimetable();
+  };
+  const originalSelect=window.selectSection;
+  if(typeof originalSelect==='function'){
+    window.__originalSelectSection=originalSelect;
+    window.selectSection=function(letter){
+      originalSelect(letter);
+      setTimeout(()=>{updateSectionSearchState();filterSectionTimetable();},30);
+    };
+  }
   document.addEventListener('click',function(e){
     const nav=e.target.closest('.navbar a');
-    if(nav){e.preventDefault(); const id=(nav.getAttribute('href')||'').replace('#',''); if(sections.includes(id)) showOnly(id); return;}
+    if(nav){e.preventDefault();const id=(nav.getAttribute('href')||'').replace('#','');if(pageIds.includes(id))showOnly(id);return;}
     const teamBtn=e.target.closest('#personal .personal-card button');
-    if(teamBtn){e.preventDefault();e.stopImmediatePropagation();const name=teamBtn.closest('.personal-card').querySelector('h3').textContent.trim();openMemberView(name);return;}
+    if(teamBtn){e.preventDefault();e.stopImmediatePropagation();openMemberView(teamBtn.closest('.personal-card').querySelector('h3').textContent.trim());return;}
     const sectionBtn=e.target.closest('#sections .section-grid button');
-    if(sectionBtn){e.preventDefault();e.stopImmediatePropagation();const letter=sectionBtn.textContent.replace('Section ','').trim();openSectionView(letter);return;}
+    if(sectionBtn){e.preventDefault();e.stopImmediatePropagation();openSectionView(sectionBtn.textContent.replace('Section ','').trim());return;}
     const venueBtn=e.target.closest('#venues .venue-card button');
-    if(venueBtn){e.preventDefault();e.stopImmediatePropagation();const name=venueBtn.closest('.venue-card').querySelector('h3').textContent.trim();openVenueView(name);return;}
+    if(venueBtn){e.preventDefault();e.stopImmediatePropagation();openVenueView(venueBtn.closest('.venue-card').querySelector('h3').textContent.trim());return;}
   },true);
   document.addEventListener('DOMContentLoaded',function(){
-    sections.forEach((id,i)=>{const el=document.getElementById(id);if(el)el.classList.toggle('active-view',i===0);});
+    pageIds.forEach((id,i)=>{const el=document.getElementById(id);if(el)el.classList.toggle('active-view',i===0);});
+    updateSectionSearchState();
   });
 })();
 </script>
-</body></html>
+</body>
+</html>
